@@ -1,7 +1,7 @@
 import './rightbar.css'
 import { Users } from '../../dummyData'
 import Online from './online/Online'
-const Rightbar = () => {
+const Rightbar = ({ profile }) => {
   const HomeRightBar = () => {
     return (
       <>
@@ -98,7 +98,7 @@ const Rightbar = () => {
   return (
     <div className="rightbar">
       <div className="rightbarWrapper">
-        <ProfileRightbar />
+        {profile ? <ProfileRightbar /> : <HomeRightBar />}
       </div>
     </div>
   )
