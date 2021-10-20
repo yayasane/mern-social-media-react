@@ -1,28 +1,50 @@
 import { MoreVert } from '@mui/icons-material'
 import './post.css'
-import { Users } from '../../../dummyData'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import { format } from 'timeago.js'
+import { Link } from 'react-router-dom'
 const Post = ({ post }) => {
-  const user = Users.filter((u) => u.id === post.userId)
-  const [like, setLike] = useState(post.like)
+  const [user, setUser] = useState({})
+  const [like, setLike] = useState(post.likes.length)
   const [isLiked, setIsLiked] = useState(false)
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER
 
   const likeHandler = () => {
     setLike((l) => (isLiked ? l - 1 : l + 1))
     setIsLiked((l) => !l)
   }
+
+  const fetchUser = async (userId) => {
+    const { data } = await axios.get(
+      `${process.env.REACT_APP_API}/users?userId=${post.userId}`,
+    )
+    setUser(data)
+  }
+
+  useEffect(() => {
+    fetchUser(post.userId)
+  }, [])
+
+  console.log(post)
   return (
     <div className="post">
       <div className="postWrapper">
         <div className="postTop">
           <div className="postTopLeft">
-            <img
-              src={user[0].profilePicture}
-              alt=""
-              className="postProfileImg"
-            />
-            <span className="postUsername">{user[0].username}</span>
-            <span className="postDate">{post.date}</span>
+            <Link to={'/profile/' + user.username}>
+              <img
+                src={
+                  user.profilePicture
+                    ? PF + user.profilePicture
+                    : PF + 'person/noAvatar.png'
+                }
+                alt=""
+                className="postProfileImg"
+              />
+            </Link>
+            <span className="postUsername">{user.username}</span>
+            <span className="postDate">{format(post.createdAt)}</span>
           </div>
           <div className="postTopRight">
             <MoreVert />
@@ -30,18 +52,18 @@ const Post = ({ post }) => {
         </div>
         <div className="postCenter"></div>
         <span className="postText">{post.desc}</span>
-        <img className="postImg" src={post.photo} alt="" />
+        <img className="postImg" src={PF + post.img} alt="" />
         <div className="postBottom">
           <div className="postBottomLeft">
             <img
               className="likeIcon"
-              src="/assets/like.png"
+              src={PF + 'like.png'}
               alt=""
               onClick={likeHandler}
             />
             <img
               className="likeIcon"
-              src="/assets/heart.png"
+              src={PF + 'heart.png'}
               alt=""
               onClick={likeHandler}
             />
