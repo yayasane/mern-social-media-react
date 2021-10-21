@@ -4,27 +4,38 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { format } from 'timeago.js'
 import { Link } from 'react-router-dom'
+import { useContext } from 'react'
+import { AuthContext } from '../../../contexts/auth/AuthContext'
 const Post = ({ post }) => {
   const [user, setUser] = useState({})
   const [like, setLike] = useState(post.likes.length)
   const [isLiked, setIsLiked] = useState(false)
   const PF = process.env.REACT_APP_PUBLIC_FOLDER
+  const API_URL = process.env.REACT_APP_API
+  const { user: currentUser } = useContext(AuthContext)
 
   const likeHandler = () => {
+    try {
+      axios.put(`${API_URL}/posts/${post._id}/like`, {
+        userId: currentUser._id,
+      })
+    } catch (error) {}
     setLike((l) => (isLiked ? l - 1 : l + 1))
     setIsLiked((l) => !l)
   }
 
   const fetchUser = async (userId) => {
-    const { data } = await axios.get(
-      `${process.env.REACT_APP_API}/users?userId=${post.userId}`,
-    )
+    const { data } = await axios.get(`${API_URL}/users?userId=${post.userId}`)
     setUser(data)
   }
 
   useEffect(() => {
     fetchUser(post.userId)
-  }, [])
+  }, [post.userId, API_URL])
+
+  useEffect(() => {
+    setIsLiked(post.likes.includes(currentUser._id))
+  }, [currentUser._id])
 
   console.log(post)
   return (

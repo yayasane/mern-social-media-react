@@ -22,6 +22,5 @@ export function authReducer(state, action) {
 
     default:
       return state
-      break
   }
 }

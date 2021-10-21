@@ -20,7 +20,7 @@ const Register = () => {
         password: password.current.value,
       }
       try {
-        const { data } = await axios.post('/auth/register', user)
+        await axios.post('/auth/register', user)
         history.push('/login')
       } catch (error) {
         console.log(error)

@@ -1,22 +1,22 @@
 import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
+import { AuthContext } from '../../contexts/auth/AuthContext'
 import './feed.css'
 import Post from './post/Post'
 import Share from './share/Share'
 const Feed = ({ username }) => {
   const [posts, setPosts] = useState([])
+  const { user } = useContext(AuthContext)
+  const API_URL = process.env.REACT_APP_API
+
   const fetchTimelinePosts = async (userId) => {
     // console.log(process.env.REACT_APP_API)
-    const { data } = await axios.get(
-      `${process.env.REACT_APP_API}/posts/timeline/616da60e2e0a2413fe8278e9`,
-    )
+    const { data } = await axios.get(`${API_URL}/posts/timeline/${user._id}`)
     setPosts(data)
   }
   const fetchUserPosts = async (username) => {
     console.log(username)
-    const { data } = await axios.get(
-      `${process.env.REACT_APP_API}/posts/profile/${username}`,
-    )
+    const { data } = await axios.get(`${API_URL}/posts/profile/${username}`)
     setPosts(data)
   }
 
@@ -24,9 +24,9 @@ const Feed = ({ username }) => {
     if (username) {
       fetchUserPosts(username)
     } else {
-      fetchTimelinePosts('userId')
+      fetchTimelinePosts(user._id)
     }
-  }, [])
+  }, [username, user._id, API_URL])
 
   return (
     <div className="feed">
