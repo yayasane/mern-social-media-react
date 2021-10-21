@@ -12,7 +12,11 @@ const Feed = ({ username }) => {
   const fetchTimelinePosts = async (userId) => {
     // console.log(process.env.REACT_APP_API)
     const { data } = await axios.get(`${API_URL}/posts/timeline/${user._id}`)
-    setPosts(data)
+    setPosts(
+      data.sort((p1, p2) => {
+        return new Date(p2.createdAt) - new Date(p1.createdAt)
+      }),
+    )
   }
   const fetchUserPosts = async (username) => {
     console.log(username)
@@ -31,7 +35,7 @@ const Feed = ({ username }) => {
   return (
     <div className="feed">
       <div className="feedWrapper">
-        <Share />
+        {username === user.username && <Share />}
         {posts.map((p) => (
           <Post key={p._id} post={p} />
         ))}
