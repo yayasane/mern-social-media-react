@@ -1,5 +1,20 @@
 import './login.css'
+import { useContext, useRef } from 'react'
+import { loginCall } from '../../apiCalls'
+import { AuthContext } from '../../contexts/auth/AuthContext'
+import { CircularProgress } from '@mui/material'
 const Login = () => {
+  const { user, isFetching, error, dispatch } = useContext(AuthContext)
+  const email = useRef()
+  const password = useRef()
+  const handleClick = (e) => {
+    e.preventDefault()
+    loginCall(
+      { email: email.current.value, password: password.current.value },
+      dispatch,
+    )
+  }
+  console.log(user)
   return (
     <div className="login">
       <div className="loginWrapper">
@@ -11,15 +26,38 @@ const Login = () => {
           </span>
         </div>
         <div className="loginRight">
-          <div className="loginBox">
-            <input placeholder="Email" className="loginInput" />
-            <input placeholder="Mot de Passe" className="loginInput" />
-            <button className="loginButton">Se connecter</button>
-            <span className="loginForgot">Mot de passe oublié?</span>
-            <button className="loginRegisterButton">
-              Créer un nouveau compte
+          <form className="loginBox" onSubmit={handleClick}>
+            <input
+              type="email"
+              placeholder="Email"
+              className="loginInput"
+              required
+              ref={email}
+            />
+            <input
+              type="password"
+              placeholder="Mot de Passe"
+              required
+              min={6}
+              className="loginInput"
+              ref={password}
+            />
+            <button className="loginButton" type="submit" disabled={isFetching}>
+              {isFetching ? (
+                <CircularProgress color="inherit" size="15px" />
+              ) : (
+                'Se connecter'
+              )}
             </button>
-          </div>
+            <span className="loginForgot">Mot de passe oublié?</span>
+            <button className="loginRegisterButton" disabled={isFetching}>
+              {isFetching ? (
+                <CircularProgress color="inherit" size="15px" />
+              ) : (
+                'Créer un nouveau compte'
+              )}
+            </button>
+          </form>
         </div>
       </div>
     </div>
