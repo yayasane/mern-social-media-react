@@ -1,5 +1,33 @@
+import axios from 'axios'
+import { useRef } from 'react'
+import { useHistory } from 'react-router-dom'
 import './register.css'
 const Register = () => {
+  const username = useRef()
+  const email = useRef()
+  const password = useRef()
+  const passwordAgain = useRef()
+  const history = useHistory()
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (password.current.value !== passwordAgain.current.value) {
+      passwordAgain.current.setCustomValidity("Passwords don't match!")
+    } else {
+      const user = {
+        username: username.current.value,
+        email: email.current.value,
+        password: password.current.value,
+      }
+      try {
+        const { data } = await axios.post('/auth/register', user)
+        history.push('/login')
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
+
   return (
     <div className="login">
       <div className="loginWrapper">
@@ -9,19 +37,43 @@ const Register = () => {
             Connect with friends and the world around you on Scinsocial.
           </span>
         </div>
-        <div className="loginRight">
+        <form className="loginRight" onSubmit={handleSubmit}>
           <div className="loginBox">
-            <input placeholder="Username" className="loginInput" />
-            <input placeholder="Email" className="loginInput" />
-            <input placeholder="Mot de Passe" className="loginInput" />
             <input
+              required
+              type="text"
+              placeholder="Username"
+              className="loginInput"
+              ref={username}
+            />
+            <input
+              required
+              type="email"
+              placeholder="Email"
+              className="loginInput"
+              ref={email}
+            />
+            <input
+              required
+              type="password"
+              placeholder="Mot de Passe"
+              className="loginInput"
+              ref={password}
+              minLength="6"
+            />
+            <input
+              required
+              type="password"
               placeholder="Confirmation de Mot de Passe"
               className="loginInput"
+              ref={passwordAgain}
             />
-            <button className="loginButton">S'inscrire</button>
+            <button className="loginButton" type="submit">
+              S'inscrire
+            </button>
             <button className="loginRegisterButton">Se connecter</button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   )
