@@ -37,7 +37,6 @@ const Post = ({ post }) => {
     setIsLiked(post.likes.includes(currentUser._id))
   }, [currentUser._id])
 
-  console.log(post)
   return (
     <div className="post">
       <div className="postWrapper">

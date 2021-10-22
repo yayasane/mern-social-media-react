@@ -19,12 +19,20 @@ function App() {
     <Router>
       <Switch>
         <PrivateRoute path="/" exact component={Home} />
-        <Route path={'/login'}>
-          user ? <Redirect to="/" /> : <Login />
-        </Route>
-        <Route path={'/register'}>
-          user ? <Redirect to="/" /> : <Register />
-        </Route>
+        <Route
+          path="/register"
+          render={(props) =>
+            user ? <Redirect to="/" /> : <Login {...props} />
+          }
+          exact
+        />
+        <Route
+          path="/login"
+          render={(props) =>
+            user ? <Redirect to="/" /> : <Login {...props} />
+          }
+          exact
+        />
         <PrivateRoute path={'/profile/:username'} component={Profile} />
         <PrivateRoute path={'/messenger'} component={Messenger} />
         <Redirect to="/" />
