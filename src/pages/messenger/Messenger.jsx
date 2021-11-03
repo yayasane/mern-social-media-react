@@ -62,7 +62,7 @@ const Messenger = () => {
   }
 
   useEffect(() => {
-    socket.current = io('ws://localhost:8900')
+    socket.current = io('ws://social-media-websocket.herokuapp.com')
     socket.current.on('getMessage', (data) => {
       setArrivalMessage({
         sender: data.senderId,
