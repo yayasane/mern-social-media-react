@@ -14,7 +14,7 @@ const ChatOnline = ({ onlineUsers, currentId, setCurrentChat }) => {
   }
 
   const fetchConversation = async (user) => {
-    console.log(user)
+    // console.log(user)
     const { data } = await axios.get(
       `${API_URL}/conversations/find/${currentId}/${user._id}`,
     )
@@ -29,7 +29,6 @@ const ChatOnline = ({ onlineUsers, currentId, setCurrentChat }) => {
   useEffect(() => {
     fetchFriends(currentId)
   }, [currentId])
-  console.log(friends)
   return (
     <div className="chatOnline">
       {onlineFriends.map((o) => (

@@ -22,7 +22,7 @@ function App() {
         <Route
           path="/register"
           render={(props) =>
-            user ? <Redirect to="/" /> : <Login {...props} />
+            user ? <Redirect to="/" /> : <Register {...props} />
           }
           exact
         />

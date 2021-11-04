@@ -12,7 +12,7 @@ const Conversation = ({ conversation, currentUser }) => {
   const fetchFriend = async (friendId) => {
     try {
       const { data } = await axios.get(`${API_URL}/users?userId=${friendId}`)
-      console.log(data)
+      // console.log(data)
       setUser(data)
     } catch (err) {
       console.log(err)

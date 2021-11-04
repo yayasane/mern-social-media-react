@@ -21,6 +21,7 @@ const Messenger = () => {
   const socket = useRef()
 
   const API_URL = process.env.REACT_APP_API
+  const socketUrl = process.env.REACT_APP_WEB_SOCKET_URL
 
   const fetchConversations = async (userId) => {
     try {
@@ -62,13 +63,25 @@ const Messenger = () => {
   }
 
   useEffect(() => {
-    socket.current = io('ws://social-media-websocket.herokuapp.com')
+    //Mixed Active Content est désormais bloqué par défaut dans Firefox 23 !
+    //What is Mixed Content? Lorsqu'un utilisateur visite une page servie via HTTP, sa connexion est ouverte aux attaques d'écoute clandestine et de l'homme du milieu (MITM).  Lorsqu'un utilisateur visite une page servie via HTTPS, sa connexion avec le serveur Web est authentifiée et cryptée avec SSL et donc protégée contre les indiscrets et les attaques MITM.
+    socket.current = io(window.location.protocol + '//' + socketUrl)
+    socket.current.on('connect', () => {
+      socket.current.emit('addUser', user._id)
+      console.log('conect')
+    })
     socket.current.on('getMessage', (data) => {
       setArrivalMessage({
         sender: data.senderId,
         text: data.text,
         createdAt: Date.now(),
       })
+    })
+    socket.current.on('disconnect', (reason) => {
+      if (reason === 'io server disconnect') {
+        // the disconnection was initiated by the server, you need to reconnect manually    s
+        socket.current.connect()
+      } // else the socket will automatically try to reconnect
     })
   }, [])
 
@@ -79,7 +92,6 @@ const Messenger = () => {
   }, [arrivalMessage, currentChat])
 
   useEffect(() => {
-    socket.current.emit('addUser', user._id)
     socket.current.on('getUsers', (users) => {
       setOnlineUsers(
         user.followings.filter((f) => users.some((u) => u.userId === f)),
