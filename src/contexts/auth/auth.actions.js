@@ -10,6 +10,17 @@ export const LoginFaillure = (error) => ({
   payload: error,
 })
 
+export const RegisterStart = () => ({
+  type: 'REGISTER_START',
+})
+export const RegisterSuccess = () => ({
+  type: 'REGISTER_SUCCESS',
+})
+export const RegisterFaillure = (error) => ({
+  type: 'REGISTER_FAILLURE',
+  payload: error,
+})
+
 export const Follow = (userId) => ({
   type: 'FOLLOW',
   payload: userId,

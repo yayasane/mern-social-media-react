@@ -1,19 +1,21 @@
-import './login.css'
-import { useContext, useRef } from 'react'
-import { loginCall } from '../../apiCalls'
-import { AuthContext } from '../../contexts/auth/AuthContext'
 import { CircularProgress } from '@mui/material'
+import { useContext, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { loginCall } from '../../apiCalls'
+import { REQUEST_STATE_LOADING } from '../../constantes/constantes'
+import { AuthContext } from '../../contexts/auth/AuthContext'
+import './login.css'
 const Login = () => {
-  const { user, isFetching, error, dispatch } = useContext(AuthContext)
+  const { user, requestState, error, dispatchAuth } = useContext(AuthContext)
   const email = useRef()
   const password = useRef()
   const handleClick = (e) => {
     e.preventDefault()
-    loginCall(
+    /* const isAuth = await */ loginCall(
       { email: email.current.value, password: password.current.value },
-      dispatch,
+      dispatchAuth,
     )
+    // isAuth && setIsAuthenticated(true)
   }
   console.log(user)
   return (
@@ -43,8 +45,12 @@ const Login = () => {
               className="loginInput"
               ref={password}
             />
-            <button className="loginButton" type="submit" disabled={isFetching}>
-              {isFetching ? (
+            <button
+              className="loginButton"
+              type="submit"
+              disabled={requestState === REQUEST_STATE_LOADING}
+            >
+              {requestState === REQUEST_STATE_LOADING ? (
                 <CircularProgress color="inherit" size="15px" />
               ) : (
                 'Se connecter'
@@ -53,8 +59,11 @@ const Login = () => {
             <span className="loginForgot">Mot de passe oublié?</span>
           </form>
           <Link to="/register">
-            <button className="loginRegisterButton" disabled={isFetching}>
-              {isFetching ? (
+            <button
+              className="loginRegisterButton"
+              disabled={requestState === REQUEST_STATE_LOADING}
+            >
+              {requestState === REQUEST_STATE_LOADING ? (
                 <CircularProgress color="inherit" size="15px" />
               ) : (
                 'Créer un nouveau compte'

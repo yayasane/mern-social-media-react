@@ -71,18 +71,19 @@ const Messenger = () => {
       console.log('conect')
     })
     socket.current.on('getMessage', (data) => {
+      console.log('on get message')
       setArrivalMessage({
         sender: data.senderId,
         text: data.text,
         createdAt: Date.now(),
       })
     })
-    socket.current.on('disconnect', (reason) => {
+    /* socket.current.on('disconnect', (reason) => {
       if (reason === 'io server disconnect') {
         // the disconnection was initiated by the server, you need to reconnect manually    s
         socket.current.connect()
       } // else the socket will automatically try to reconnect
-    })
+    }) */
   }, [])
 
   useEffect(() => {

@@ -36,12 +36,12 @@ const Share = () => {
 
       try {
         await axios.post(`${API_URL}/upload`, data)
-        window.location.reload()
       } catch (error) {}
     }
 
     try {
       await axios.post(`${API_URL}/posts`, newPost)
+      window.location.reload()
     } catch (error) {}
   }
 

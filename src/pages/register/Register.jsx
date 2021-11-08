@@ -1,6 +1,8 @@
 import axios from 'axios'
-import { useRef } from 'react'
+import { useContext, useRef } from 'react'
 import { Link, useHistory } from 'react-router-dom'
+import { registerCall } from '../../apiCalls'
+import { AuthContext } from '../../contexts/auth/AuthContext'
 import './register.css'
 const Register = () => {
   const username = useRef()
@@ -8,6 +10,7 @@ const Register = () => {
   const password = useRef()
   const passwordAgain = useRef()
   const history = useHistory()
+  const { user, requestState, error, dispatchAuth } = useContext(AuthContext)
 
   const API_URL = process.env.REACT_APP_API
 
@@ -15,19 +18,14 @@ const Register = () => {
     e.preventDefault()
     console.log(password.current.value, passwordAgain.current.value)
     if (password.current.value !== passwordAgain.current.value) {
-      passwordAgain.current.setCustomValidity("Passwords don't match!")
+      // passwordAgain.current.setCustomValidity("Passwords don't match!")
     } else {
       const user = {
         username: username.current.value,
         email: email.current.value,
         password: password.current.value,
       }
-      try {
-        await axios.post(`${API_URL}/auth/register`, user)
-        history.push('/login')
-      } catch (error) {
-        console.log(error)
-      }
+      ;(await registerCall(user, dispatchAuth)) && history.push('/login')
     }
   }
 
@@ -70,7 +68,6 @@ const Register = () => {
               placeholder="Confirmation de Mot de Passe"
               className="loginInput"
               ref={passwordAgain}
-              onInput="this.setCustomValidity('')"
             />
             <button className="loginButton" type="submit">
               S'inscrire

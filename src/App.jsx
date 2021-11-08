@@ -1,17 +1,17 @@
+import React, { useContext } from 'react'
 import {
   BrowserRouter as Router,
   Redirect,
   Route,
   Switch,
 } from 'react-router-dom'
+import PrivateRoute from './components/PrivateRoutes'
 import { AuthContext } from './contexts/auth/AuthContext'
 import Home from './pages/home/Home'
 import Login from './pages/login/Login'
+import Messenger from './pages/messenger/Messenger'
 import Profile from './pages/profile/Profile'
 import Register from './pages/register/Register'
-import React, { useContext } from 'react'
-import Messenger from './pages/messenger/Messenger'
-import PrivateRoute from './components/PrivateRoutes'
 
 function App() {
   const { user } = useContext(AuthContext)
